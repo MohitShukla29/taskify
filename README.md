@@ -1,36 +1,72 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Taskify - Team Task Management Web Application
 
-## Getting Started
+Taskify is a modern, full-stack collaborative application built to manage team projects, assign tasks, and track progress seamlessly.
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **User Authentication:** Secure JWT-based signup and login.
+- **Project Management:** Create projects and add team members (Admins can manage members).
+- **Task Management:** Admins can create tasks, set priority, due dates, and assign them. Members can update the status of tasks assigned to them.
+- **Role-Based Access Control:** Project Creators are Admins, added users are Members or Admins.
+- **Dynamic Dashboard:** Overview of all projects, active tasks, and overdue items.
+- **Modern UI:** Built with Vanilla CSS, featuring a responsive glassmorphism design system.
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Technology Stack
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Framework:** Next.js (App Router)
+- **Database:** PostgreSQL (using SQLite for local dev, Postgres on Railway)
+- **ORM:** Prisma
+- **Styling:** Vanilla CSS
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Local Setup
 
-## Learn More
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+2. **Database Setup:**
+   The project uses SQLite locally by default.
+   ```bash
+   npx prisma db push
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. **Run the development server:**
+   ```bash
+   npm run dev
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+4. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Deploy on Vercel
+## Deployment to Railway (Mandatory Steps)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Deploying this Next.js app to Railway is straightforward. Railway detects Next.js out of the box.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **Push to GitHub:**
+   Commit all files and push this repository to your GitHub account.
+
+2. **Create a Railway Project:**
+   - Go to [Railway.app](https://railway.app/).
+   - Click "New Project" -> "Deploy from GitHub repo" and select your repository.
+
+3. **Add PostgreSQL Database (Recommended):**
+   - In your Railway project, click "New" -> "Database" -> "Add PostgreSQL".
+   - This will provision a cloud database for your app.
+
+4. **Configure Environment Variables:**
+   - Go to your Next.js service settings in Railway -> **Variables**.
+   - Add `JWT_SECRET` (generate a random secure string).
+   - Add `DATABASE_URL`. Railway automatically provides this from your Postgres database if you click "Reference Variable".
+   - *Note:* Since you changed to Postgres for production, you need to update `prisma/schema.prisma` from `provider = "sqlite"` to `provider = "postgresql"` and push to Github before deploying, OR you can keep it SQLite on Railway, but you MUST add a Volume in Railway settings so the `.db` file isn't deleted on every redeploy.
+
+5. **Deploy:**
+   - Railway will automatically run `npm run build` and `npm start`.
+   - Your application will be live at the generated Railway domain.
+
+## Recording the Demo Video
+
+As requested in the assignment, please record a 2-5 minute demo video explaining:
+1. The project structure and stack.
+2. Demonstrating Signup, Login, and creating a Project.
+3. Adding a member to the project.
+4. Creating a task and showing the dashboard.
