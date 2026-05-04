@@ -2,19 +2,20 @@ import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { getUserIdFromRequest } from '@/lib/api-auth'
 
-export async function GET(request: Request, { params }: { params: { projectId: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ projectId: string }> }) {
+  const { projectId } = await params
   const userId = await getUserIdFromRequest(request)
   if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   try {
     // Check if user is a member
     const member = await prisma.projectMember.findUnique({
-      where: { projectId_userId: { projectId: params.projectId, userId } }
+      where: { projectId_userId: { projectId, userId } }
     })
     if (!member) return NextResponse.json({ error: 'Forbidden' }, { status: 403 })
 
     const tasks = await prisma.task.findMany({
-      where: { projectId: params.projectId },
+      where: { projectId },
       include: { assignee: { select: { id: true, name: true } } },
       orderBy: { createdAt: 'desc' }
     })
@@ -25,7 +26,8 @@ export async function GET(request: Request, { params }: { params: { projectId: s
   }
 }
 
-export async function POST(request: Request, { params }: { params: { projectId: string } }) {
+export async function POST(request: Request, { params }: { params: Promise<{ projectId: string }> }) {
+  const { projectId } = await params
   const userId = await getUserIdFromRequest(request)
   if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
@@ -38,7 +40,7 @@ export async function POST(request: Request, { params }: { params: { projectId: 
 
     // Verify current user is ADMIN of the project
     const member = await prisma.projectMember.findUnique({
-      where: { projectId_userId: { projectId: params.projectId, userId } }
+      where: { projectId_userId: { projectId, userId } }
     })
 
     if (!member || member.role !== 'ADMIN') {
@@ -48,7 +50,7 @@ export async function POST(request: Request, { params }: { params: { projectId: 
     // Assignee validation: if assigneeId is provided, they must be a project member
     if (assigneeId) {
       const assigneeMember = await prisma.projectMember.findUnique({
-        where: { projectId_userId: { projectId: params.projectId, userId: assigneeId } }
+        where: { projectId_userId: { projectId, userId: assigneeId } }
       })
       if (!assigneeMember) {
         return NextResponse.json({ error: 'Assignee is not a member of this project' }, { status: 400 })
@@ -61,7 +63,7 @@ export async function POST(request: Request, { params }: { params: { projectId: 
         description,
         dueDate: dueDate ? new Date(dueDate) : null,
         priority: priority || 'Medium',
-        projectId: params.projectId,
+        projectId,
         assigneeId: assigneeId || null
       },
       include: { assignee: { select: { id: true, name: true } } }

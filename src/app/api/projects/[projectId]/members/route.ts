@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { getUserIdFromRequest } from '@/lib/api-auth'
 
-export async function POST(request: Request, { params }: { params: { projectId: string } }) {
+export async function POST(request: Request, { params }: { params: Promise<{ projectId: string }> }) {
+  const { projectId } = await params
   const userId = await getUserIdFromRequest(request)
   if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
@@ -15,7 +16,7 @@ export async function POST(request: Request, { params }: { params: { projectId: 
 
     // Verify current user is ADMIN of the project
     const currentMember = await prisma.projectMember.findUnique({
-      where: { projectId_userId: { projectId: params.projectId, userId } }
+      where: { projectId_userId: { projectId, userId } }
     })
 
     if (!currentMember || currentMember.role !== 'ADMIN') {
@@ -30,7 +31,7 @@ export async function POST(request: Request, { params }: { params: { projectId: 
 
     // Check if already a member
     const existingMember = await prisma.projectMember.findUnique({
-      where: { projectId_userId: { projectId: params.projectId, userId: userToAdd.id } }
+      where: { projectId_userId: { projectId, userId: userToAdd.id } }
     })
     
     if (existingMember) {
@@ -39,7 +40,7 @@ export async function POST(request: Request, { params }: { params: { projectId: 
 
     const newMember = await prisma.projectMember.create({
       data: {
-        projectId: params.projectId,
+        projectId,
         userId: userToAdd.id,
         role: role || 'MEMBER'
       },

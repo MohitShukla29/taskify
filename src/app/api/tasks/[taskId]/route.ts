@@ -2,7 +2,8 @@ import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { getUserIdFromRequest } from '@/lib/api-auth'
 
-export async function PUT(request: Request, { params }: { params: { taskId: string } }) {
+export async function PUT(request: Request, { params }: { params: Promise<{ taskId: string }> }) {
+  const { taskId } = await params
   const userId = await getUserIdFromRequest(request)
   if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
@@ -10,7 +11,7 @@ export async function PUT(request: Request, { params }: { params: { taskId: stri
     const data = await request.json()
     
     const task = await prisma.task.findUnique({
-      where: { id: params.taskId },
+      where: { id: taskId },
       include: { project: { include: { members: true } } }
     })
 
@@ -27,7 +28,7 @@ export async function PUT(request: Request, { params }: { params: { taskId: stri
       
       // Members can ONLY update status
       const updatedTask = await prisma.task.update({
-        where: { id: params.taskId },
+        where: { id: taskId },
         data: { status: data.status || task.status },
         include: { assignee: { select: { id: true, name: true } } }
       })
@@ -36,7 +37,7 @@ export async function PUT(request: Request, { params }: { params: { taskId: stri
 
     // Admin can update anything
     const updatedTask = await prisma.task.update({
-      where: { id: params.taskId },
+      where: { id: taskId },
       data: {
         title: data.title !== undefined ? data.title : task.title,
         description: data.description !== undefined ? data.description : task.description,
@@ -54,13 +55,14 @@ export async function PUT(request: Request, { params }: { params: { taskId: stri
   }
 }
 
-export async function DELETE(request: Request, { params }: { params: { taskId: string } }) {
+export async function DELETE(request: Request, { params }: { params: Promise<{ taskId: string }> }) {
+  const { taskId } = await params
   const userId = await getUserIdFromRequest(request)
   if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   try {
     const task = await prisma.task.findUnique({
-      where: { id: params.taskId },
+      where: { id: taskId },
       include: { project: { include: { members: true } } }
     })
 
@@ -71,7 +73,7 @@ export async function DELETE(request: Request, { params }: { params: { taskId: s
       return NextResponse.json({ error: 'Forbidden: Only admins can delete tasks' }, { status: 403 })
     }
 
-    await prisma.task.delete({ where: { id: params.taskId } })
+    await prisma.task.delete({ where: { id: taskId } })
 
     return NextResponse.json({ message: 'Task deleted successfully' }, { status: 200 })
   } catch (error: any) {

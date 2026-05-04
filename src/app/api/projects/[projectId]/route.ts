@@ -2,13 +2,14 @@ import { NextResponse } from 'next/server'
 import prisma from '@/lib/prisma'
 import { getUserIdFromRequest } from '@/lib/api-auth'
 
-export async function GET(request: Request, { params }: { params: { projectId: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ projectId: string }> }) {
+  const { projectId } = await params
   const userId = await getUserIdFromRequest(request)
   if (!userId) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
   try {
     const project = await prisma.project.findUnique({
-      where: { id: params.projectId },
+      where: { id: projectId },
       include: {
         members: {
           include: { user: { select: { id: true, name: true, email: true } } }
