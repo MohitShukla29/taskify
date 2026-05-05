@@ -189,7 +189,7 @@ export default function Dashboard() {
 
       {/* Stat cards */}
       {stats ? (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-5 stagger" style={{ marginBottom: '3rem' }}>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 stagger" style={{ marginBottom: '3rem' }}>
           {statCards.map(card => (
             <StatCard key={card.label} {...card} />
           ))}
@@ -200,57 +200,102 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* Tasks by Status */}
-      {stats && (
-        <div className="card" style={{ maxWidth: '720px' }}>
-          <h2 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1.75rem', display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-main)' }}>
-            <span style={{
-              width: '10px', height: '10px', borderRadius: '50%',
-              background: 'var(--grad-primary)', display: 'inline-block',
-              boxShadow: '0 0 8px var(--primary-glow)',
-            }}/>
-            Tasks by Status
-          </h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
-            {Object.entries(stats.tasksByStatus).map(([status, count]: [string, any]) => {
-              const pct  = stats.totalTasks > 0 ? (count / stats.totalTasks) * 100 : 0;
-              const cfg  = statusConfig[status] ?? { color: 'var(--text-muted)', glow: 'rgba(255,255,255,0.05)', label: status };
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6" style={{ alignItems: 'start' }}>
+        {/* Tasks by Status */}
+        {stats && (
+          <div className="card w-full">
+            <h2 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1.75rem', display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-main)' }}>
+              <span style={{
+                width: '10px', height: '10px', borderRadius: '50%',
+                background: 'var(--grad-primary)', display: 'inline-block',
+                boxShadow: '0 0 8px var(--primary-glow)',
+              }}/>
+              Tasks by Status
+            </h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+              {Object.entries(stats.tasksByStatus).map(([status, count]: [string, any]) => {
+                const pct  = stats.totalTasks > 0 ? (count / stats.totalTasks) * 100 : 0;
+                const cfg  = statusConfig[status] ?? { color: 'var(--text-muted)', glow: 'rgba(255,255,255,0.05)', label: status };
 
-              return (
-                <div key={status} style={{ transition: 'var(--transition-fast)' }} className="hover:opacity-90">
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.625rem' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
-                      <span style={{
-                        width: '8px', height: '8px', borderRadius: '50%',
-                        background: cfg.color, display: 'inline-block', flexShrink: 0,
-                        boxShadow: `0 0 8px ${cfg.glow}`,
-                      }}/>
-                      <span style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-sub)' }}>{cfg.label}</span>
-                    </div>
-                    <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 500 }}>
-                      {count} {count === 1 ? 'task' : 'tasks'}
-                      <span style={{ marginLeft: '0.5rem', color: cfg.color, fontWeight: 700, display: 'inline-block', minWidth: '3ch', textAlign: 'right' }}>
-                        {Math.round(pct)}%
+                return (
+                  <div key={status} style={{ transition: 'var(--transition-fast)' }} className="hover:opacity-90">
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.625rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem' }}>
+                        <span style={{
+                          width: '8px', height: '8px', borderRadius: '50%',
+                          background: cfg.color, display: 'inline-block', flexShrink: 0,
+                          boxShadow: `0 0 8px ${cfg.glow}`,
+                        }}/>
+                        <span style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-sub)' }}>{cfg.label}</span>
+                      </div>
+                      <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 500 }}>
+                        {count} {count === 1 ? 'task' : 'tasks'}
+                        <span style={{ marginLeft: '0.5rem', color: cfg.color, fontWeight: 700, display: 'inline-block', minWidth: '3ch', textAlign: 'right' }}>
+                          {Math.round(pct)}%
+                        </span>
                       </span>
+                    </div>
+                    <div className="progress-bar" style={{ height: '8px' }}>
+                      <div
+                        className="progress-fill"
+                        style={{
+                          width: progReady ? `${pct}%` : '0%',
+                          background: cfg.color,
+                          boxShadow: `0 0 10px ${cfg.glow}`,
+                          animation: progReady ? `progressIn 1.2s cubic-bezier(0.4,0,0.2,1) forwards` : 'none',
+                        }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Tasks per User */}
+        {stats && stats.tasksPerUser && (
+          <div className="card w-full">
+            <h2 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1.75rem', display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-main)' }}>
+              <span style={{
+                width: '10px', height: '10px', borderRadius: '50%',
+                background: 'var(--grad-teal)', display: 'inline-block',
+                boxShadow: '0 0 8px var(--teal-glow)',
+              }}/>
+              Tasks per User
+            </h2>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {stats.tasksPerUser.length > 0 ? stats.tasksPerUser.map((u: any, idx: number) => (
+                <div key={idx} style={{
+                  display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+                  background: 'rgba(255,255,255,0.03)', padding: '0.75rem 1rem', borderRadius: 'var(--radius-md)',
+                  border: '1px solid var(--border-subtle)'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                    <div style={{
+                      width: '28px', height: '28px', borderRadius: '50%',
+                      background: 'var(--grad-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      fontSize: '0.7rem', fontWeight: 700, color: '#fff'
+                    }}>
+                      {u.name.charAt(0)}
+                    </div>
+                    <span style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-main)' }}>
+                      {u.name}
                     </span>
                   </div>
-                  <div className="progress-bar" style={{ height: '8px' }}>
-                    <div
-                      className="progress-fill"
-                      style={{
-                        width: progReady ? `${pct}%` : '0%',
-                        background: cfg.color,
-                        boxShadow: `0 0 10px ${cfg.glow}`,
-                        animation: progReady ? `progressIn 1.2s cubic-bezier(0.4,0,0.2,1) forwards` : 'none',
-                      }}
-                    />
-                  </div>
+                  <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)', fontWeight: 600 }}>
+                    {u.count} {u.count === 1 ? 'task' : 'tasks'}
+                  </span>
                 </div>
-              );
-            })}
+              )) : (
+                <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', textAlign: 'center', padding: '1rem 0' }}>
+                  No assigned tasks found.
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
     </div>

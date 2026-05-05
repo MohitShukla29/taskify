@@ -55,6 +55,7 @@ export default function ProjectDetail({ params }: { params: Promise<{ projectId:
   const [taskDesc,     setTaskDesc]     = useState('');
   const [taskPriority, setTaskPriority] = useState('Medium');
   const [taskAssignee, setTaskAssignee] = useState('');
+  const [taskDueDate,  setTaskDueDate]  = useState('');
 
   const [memberEmail, setMemberEmail] = useState('');
   const [memberRole,  setMemberRole]  = useState('MEMBER');
@@ -86,11 +87,11 @@ export default function ProjectDetail({ params }: { params: Promise<{ projectId:
       const res = await fetch(`${API}/api/projects/${projectId}/tasks`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: taskTitle, description: taskDesc, priority: taskPriority, assigneeId: taskAssignee || null }),
+        body: JSON.stringify({ title: taskTitle, description: taskDesc, priority: taskPriority, assigneeId: taskAssignee || null, dueDate: taskDueDate || null }),
         credentials: 'include',
       });
       if (res.ok) {
-        setTaskTitle(''); setTaskDesc(''); setTaskAssignee('');
+        setTaskTitle(''); setTaskDesc(''); setTaskAssignee(''); setTaskDueDate('');
         setIsTaskModalOpen(false);
         fetchProjectData();
       } else {
@@ -128,6 +129,40 @@ export default function ProjectDetail({ params }: { params: Promise<{ projectId:
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: newStatus }),
+        credentials: 'include',
+      });
+      if (res.ok) {
+        fetchProjectData();
+      } else {
+        const data = await res.json();
+        alert(data.error);
+      }
+    } catch (err) { console.error(err); }
+  };
+
+  const handleRemoveMember = async (userId: string) => {
+    if (!confirm('Are you sure you want to remove this member?')) return;
+    try {
+      const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      const res = await fetch(`${API}/api/projects/${projectId}/members/${userId}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+      if (res.ok) {
+        fetchProjectData();
+      } else {
+        const data = await res.json();
+        alert(data.error);
+      }
+    } catch (err) { console.error(err); }
+  };
+
+  const handleDeleteTask = async (taskId: string) => {
+    if (!confirm('Are you sure you want to delete this task?')) return;
+    try {
+      const API = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000';
+      const res = await fetch(`${API}/api/tasks/${taskId}`, {
+        method: 'DELETE',
         credentials: 'include',
       });
       if (res.ok) {
@@ -246,18 +281,47 @@ export default function ProjectDetail({ params }: { params: Promise<{ projectId:
                         key={task.id}
                         className={`task-card priority-${task.priority.toLowerCase()}`}
                       >
-                        <h4 style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.375rem', color: 'var(--text-main)', lineHeight: 1.3 }}>
-                          {task.title}
-                        </h4>
-                        {task.description && (
-                          <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '0.625rem', lineHeight: 1.5 }}
-                             className="line-clamp-2">
-                            {task.description}
-                          </p>
-                        )}
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                          <h4 style={{ fontSize: '0.875rem', fontWeight: 600, marginBottom: '0.375rem', color: 'var(--text-main)', lineHeight: 1.3, paddingRight: '1rem' }}>
+                            {task.title}
+                          </h4>
+                          <button 
+                            onClick={(e) => { e.stopPropagation(); if (isAdmin) handleDeleteTask(task.id); }} 
+                            className="btn-ghost" 
+                            style={{ 
+                              color: isAdmin ? 'var(--rose)' : 'var(--text-muted)', 
+                              opacity: isAdmin ? 1 : 0.4,
+                              padding: '0.1rem', 
+                              marginTop: '-0.2rem', 
+                              marginRight: '-0.2rem',
+                              cursor: isAdmin ? 'pointer' : 'not-allowed'
+                            }} 
+                            title={isAdmin ? "Delete Task" : "Only Admins can delete tasks"}
+                            disabled={!isAdmin}
+                          >
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                              <polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                          </button>
+                        </div>
+                          {task.description && (
+                            <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginBottom: '0.625rem', lineHeight: 1.5 }}
+                               className="line-clamp-2">
+                              {task.description}
+                            </p>
+                          )}
+                          
+                          {task.dueDate && (
+                            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginBottom: '0.625rem', display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
+                              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                              </svg>
+                              {new Date(task.dueDate).toLocaleDateString()}
+                            </div>
+                          )}
 
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.625rem' }}>
-                          {/* Assignee */}
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.625rem' }}>
+                            {/* Assignee */}
                           <div style={{ display: 'flex', alignItems: 'center', gap: '0.375rem' }}>
                             {task.assignee ? (
                               <>
@@ -390,9 +454,18 @@ export default function ProjectDetail({ params }: { params: Promise<{ projectId:
                     </div>
                   </div>
                 </div>
-                <span className={`badge ${member.role === 'ADMIN' ? 'badge-warning' : 'badge-info'}`}>
-                  {member.role}
-                </span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                  <span className={`badge ${member.role === 'ADMIN' ? 'badge-warning' : 'badge-info'}`}>
+                    {member.role}
+                  </span>
+                  {isAdmin && member.userId !== project.creatorId && (
+                    <button onClick={() => handleRemoveMember(member.userId)} className="btn-ghost" style={{ color: 'var(--rose)', padding: '0.25rem' }} title="Remove Member">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                      </svg>
+                    </button>
+                  )}
+                </div>
               </div>
             ))}
           </div>
@@ -421,6 +494,10 @@ export default function ProjectDetail({ params }: { params: Promise<{ projectId:
               </div>
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.875rem' }}>
                 <div className="form-group">
+                  <label className="form-label">Due Date</label>
+                  <input type="date" className="input" value={taskDueDate} onChange={e => setTaskDueDate(e.target.value)} />
+                </div>
+                <div className="form-group">
                   <label className="form-label">Priority</label>
                   <select className="input" value={taskPriority} onChange={e => setTaskPriority(e.target.value)}>
                     <option value="Low">Low</option>
@@ -428,15 +505,15 @@ export default function ProjectDetail({ params }: { params: Promise<{ projectId:
                     <option value="High">High</option>
                   </select>
                 </div>
-                <div className="form-group">
-                  <label className="form-label">Assignee</label>
-                  <select className="input" value={taskAssignee} onChange={e => setTaskAssignee(e.target.value)}>
-                    <option value="">Unassigned</option>
-                    {project.members.map((m: any) => (
-                      <option key={m.userId} value={m.userId}>{m.user.name}</option>
-                    ))}
-                  </select>
-                </div>
+              </div>
+              <div className="form-group">
+                <label className="form-label">Assignee</label>
+                <select className="input" value={taskAssignee} onChange={e => setTaskAssignee(e.target.value)}>
+                  <option value="">Unassigned</option>
+                  {project.members.map((m: any) => (
+                    <option key={m.userId} value={m.userId}>{m.user.name}</option>
+                  ))}
+                </select>
               </div>
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.625rem', marginTop: '0.5rem' }}>
                 <button type="button" onClick={() => setIsTaskModalOpen(false)} className="btn btn-secondary">Cancel</button>
