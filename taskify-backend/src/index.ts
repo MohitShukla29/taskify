@@ -41,6 +41,7 @@ app.use('/api/auth',                        authRouter);
 app.use('/api/dashboard',                   dashboardRouter);
 app.use('/api/projects',                    projectsRouter);
 app.use('/api/projects/:projectId/members', membersRouter);
+app.use('/api/projects/:projectId/tasks',   tasksRouter);
 app.use('/api/tasks',                       tasksRouter);
 
 // ── 404 handler ───────────────────────────────────────────────────────────────
