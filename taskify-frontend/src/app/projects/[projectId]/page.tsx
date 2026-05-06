@@ -361,10 +361,10 @@ export default function ProjectDetail({ params }: { params: Promise<{ projectId:
                               onChange={e => handleUpdateTaskStatus(task.id, e.target.value)}
                               disabled={!isAdmin && task.assigneeId !== user?.id}
                               style={{
-                                background: 'rgba(255,255,255,0.04)',
-                                border: '1px solid var(--border-subtle)',
+                                background: 'var(--bg-input)',
+                                border: '1px solid var(--border)',
                                 borderRadius: 'var(--radius-sm)',
-                                color: 'var(--text-muted)',
+                                color: 'var(--text-sub)',
                                 fontSize: '0.72rem',
                                 padding: '0.2rem 0.4rem',
                                 cursor: 'pointer',
@@ -386,7 +386,7 @@ export default function ProjectDetail({ params }: { params: Promise<{ projectId:
                         flex: 1, display: 'flex', flexDirection: 'column',
                         alignItems: 'center', justifyContent: 'center',
                         padding: '2rem 1rem',
-                        border: '1px dashed rgba(114,104,160,0.2)',
+                        border: '1px dashed var(--border)',
                         borderRadius: 'var(--radius-md)',
                         color: 'var(--text-muted)',
                         fontSize: '0.8rem', textAlign: 'center', gap: '0.5rem',
@@ -417,31 +417,27 @@ export default function ProjectDetail({ params }: { params: Promise<{ projectId:
                 key={member.id}
                 style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                  background: 'rgba(22,20,39,0.6)',
-                  border: '1px solid var(--border-subtle)',
+                  background: 'var(--bg-surface)',
+                  border: '1px solid var(--border)',
                   borderRadius: 'var(--radius-md)',
                   padding: '0.75rem',
                   transition: 'var(--transition)',
                 }}
                 onMouseEnter={e => {
-                  (e.currentTarget as HTMLElement).style.borderColor = 'rgba(124,58,237,0.25)';
-                  (e.currentTarget as HTMLElement).style.background  = 'rgba(30,28,51,0.8)';
+                  (e.currentTarget as HTMLElement).style.borderColor = 'var(--border-input)';
+                  (e.currentTarget as HTMLElement).style.boxShadow  = 'var(--shadow-sm)';
                 }}
                 onMouseLeave={e => {
-                  (e.currentTarget as HTMLElement).style.borderColor = 'var(--border-subtle)';
-                  (e.currentTarget as HTMLElement).style.background  = 'rgba(22,20,39,0.6)';
+                  (e.currentTarget as HTMLElement).style.borderColor = 'var(--border)';
+                  (e.currentTarget as HTMLElement).style.boxShadow  = 'none';
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', minWidth: 0 }}>
                   <div style={{
                     width: '32px', height: '32px', borderRadius: '50%', flexShrink: 0,
-                    background: member.role === 'ADMIN'
-                      ? 'linear-gradient(135deg, #f59e0b, #f43f5e)'
-                      : 'linear-gradient(135deg, #7c3aed, #06b6d4)',
+                    background: member.role === 'ADMIN' ? '#f59e0b' : 'var(--primary)',
                     display: 'flex', alignItems: 'center', justifyContent: 'center',
                     fontSize: '0.75rem', fontWeight: 700, color: '#fff',
-                    border: member.role === 'ADMIN' ? '2px solid rgba(245,158,11,0.4)' : '2px solid rgba(124,58,237,0.4)',
-                    boxShadow: member.role === 'ADMIN' ? '0 0 8px rgba(245,158,11,0.25)' : '0 0 8px rgba(124,58,237,0.2)',
                   }}>
                     {member.user.name.charAt(0)}
                   </div>

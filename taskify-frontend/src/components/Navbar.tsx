@@ -33,10 +33,10 @@ export default function Navbar() {
         <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: '0.625rem', textDecoration: 'none' }} aria-label="Taskify home">
           <div style={{
             width: '34px', height: '34px',
-            background: 'linear-gradient(135deg, #7c3aed, #f43f5e)',
+            background: 'var(--primary)',
             borderRadius: '10px',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
-            boxShadow: '0 4px 16px rgba(124,58,237,0.55)',
+            boxShadow: 'var(--shadow-sm)',
             flexShrink: 0,
             transition: 'var(--transition-fast)',
           }}>
@@ -46,9 +46,8 @@ export default function Navbar() {
           </div>
           <span style={{
             fontWeight: 800, fontSize: '1.1rem',
-            background: 'linear-gradient(135deg, #ede9fe, #a78bfa)',
-            WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent',
-            backgroundClip: 'text', letterSpacing: '-0.02em',
+            color: 'var(--text-main)',
+            letterSpacing: '-0.02em',
           }}>
             Taskify
           </span>
@@ -70,9 +69,9 @@ export default function Navbar() {
                   borderRadius: '8px',
                   fontSize: '0.875rem',
                   fontWeight: isActive ? 600 : 500,
-                  color: isActive ? 'var(--primary-light)' : 'var(--text-muted)',
-                  background: isActive ? 'rgba(124,58,237,0.14)' : 'transparent',
-                  border: isActive ? '1px solid rgba(124,58,237,0.28)' : '1px solid transparent',
+                  color: isActive ? 'var(--primary)' : 'var(--text-muted)',
+                  background: isActive ? 'var(--bg-input)' : 'transparent',
+                  border: isActive ? '1px solid var(--border)' : '1px solid transparent',
                   transition: 'var(--transition-fast)',
                   textDecoration: 'none',
                   cursor: 'pointer',
@@ -80,7 +79,7 @@ export default function Navbar() {
                 onMouseEnter={e => {
                   if (!isActive) {
                     (e.currentTarget as HTMLElement).style.color = 'var(--text-main)';
-                    (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.06)';
+                    (e.currentTarget as HTMLElement).style.background = 'var(--bg-input)';
                   }
                 }}
                 onMouseLeave={e => {
@@ -100,16 +99,14 @@ export default function Navbar() {
             <div style={{
               display: 'flex', alignItems: 'center', gap: '0.75rem',
               marginLeft: '0.5rem', paddingLeft: '0.875rem',
-              borderLeft: '1px solid var(--border-subtle)',
+              borderLeft: '1px solid var(--border)',
             }}>
               {/* Avatar */}
               <div title={user.name} style={{
                 width: '32px', height: '32px', borderRadius: '50%',
-                background: 'linear-gradient(135deg, #7c3aed, #a855f7)',
-                border: '2px solid rgba(124,58,237,0.55)',
+                background: 'var(--primary)',
                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontSize: '0.75rem', fontWeight: 700, color: '#fff',
-                boxShadow: '0 0 12px rgba(124,58,237,0.4)',
                 flexShrink: 0,
                 cursor: 'default',
               }}>

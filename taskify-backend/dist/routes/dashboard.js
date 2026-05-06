@@ -43,6 +43,24 @@ router.get('/', authenticate_1.authenticate, async (req, res) => {
         const userTasksCount = await prisma_1.default.task.count({
             where: { assigneeId: userId, status: { not: 'Done' } },
         });
+        // Tasks per user
+        const tasksPerUserResult = await prisma_1.default.task.groupBy({
+            by: ['assigneeId'],
+            where: { projectId: { in: projectIds }, assigneeId: { not: null } },
+            _count: true,
+        });
+        const assigneeIds = tasksPerUserResult.map((t) => t.assigneeId);
+        const users = await prisma_1.default.user.findMany({
+            where: { id: { in: assigneeIds } },
+            select: { id: true, name: true }
+        });
+        const tasksPerUser = tasksPerUserResult.map((item) => {
+            const user = users.find((u) => u.id === item.assigneeId);
+            return {
+                name: user ? user.name : 'Unknown',
+                count: item._count,
+            };
+        }).sort((a, b) => b.count - a.count);
         res.status(200).json({
             stats: {
                 totalTasks,
@@ -50,6 +68,7 @@ router.get('/', authenticate_1.authenticate, async (req, res) => {
                 overdueTasks,
                 userTasksCount,
                 totalProjects: projectIds.length,
+                tasksPerUser,
             },
         });
     }

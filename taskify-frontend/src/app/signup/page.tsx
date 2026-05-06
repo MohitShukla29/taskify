@@ -46,8 +46,8 @@ export default function Signup() {
         className="auth-brand-panel hidden md:flex"
         style={{
           flex: '0 0 44%',
-          background: 'linear-gradient(145deg, #12102a 0%, #1e1040 50%, #0d0c18 100%)',
-          borderRight: '1px solid var(--border-subtle)',
+          background: 'linear-gradient(145deg, #eef2ff 0%, #f0f9ff 100%)',
+          borderRight: '1px solid var(--border)',
           alignItems: 'center',
           justifyContent: 'center',
           padding: '3rem',
@@ -58,51 +58,48 @@ export default function Signup() {
         <div style={{
           position: 'absolute', top: '-80px', left: '-80px',
           width: '320px', height: '320px', borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(6,182,212,0.18) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(14,165,233,0.08) 0%, transparent 70%)',
           pointerEvents: 'none',
         }}/>
         <div style={{
           position: 'absolute', bottom: '-60px', right: '-60px',
           width: '260px', height: '260px', borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(124,58,237,0.15) 0%, transparent 70%)',
+          background: 'radial-gradient(circle, rgba(79,70,229,0.08) 0%, transparent 70%)',
           pointerEvents: 'none',
         }}/>
 
-        <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', maxWidth: '340px' }}>
+        <div style={{ position: 'relative', zIndex: 1, textAlign: 'center', maxWidth: '360px' }}>
           <div style={{
             width: '64px', height: '64px', borderRadius: '18px',
-            background: 'linear-gradient(135deg, #06b6d4, #7c3aed)',
+            background: 'var(--primary)',
             display: 'flex', alignItems: 'center', justifyContent: 'center',
             margin: '0 auto 1.75rem',
-            boxShadow: '0 8px 32px rgba(6,182,212,0.4)',
+            boxShadow: 'var(--shadow-md)',
           }}>
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-              <circle cx="8.5" cy="7" r="4"/>
-              <line x1="20" y1="8" x2="20" y2="14"/>
-              <line x1="23" y1="11" x2="17" y2="11"/>
+              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
             </svg>
           </div>
-          <h2 style={{ fontSize: '2.25rem', fontWeight: 800, marginBottom: '1rem', letterSpacing: '-0.035em', lineHeight: 1.1 }}>
-            Start shipping<br />
-            <span className="gradient-text">as a team.</span>
+          <h2 style={{ fontSize: '2.5rem', fontWeight: 800, marginBottom: '1rem', letterSpacing: '-0.035em', lineHeight: 1.2, color: 'var(--text-main)' }}>
+            Join the future of<br />
+            <span style={{ color: 'var(--primary)', background: 'linear-gradient(90deg, var(--primary), var(--primary-light))', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>collaboration.</span>
           </h2>
-          <p style={{ color: 'var(--text-muted)', lineHeight: 1.7, fontSize: '0.95rem' }}>
-            Create your free account and invite your team in seconds. No credit card needed.
+          <p style={{ color: 'var(--text-muted)', lineHeight: 1.7, fontSize: '1rem' }}>
+            Experience the most powerful way to align your team, track progress, and hit every deadline.
           </p>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '2.5rem', textAlign: 'left', background: 'rgba(255,255,255,0.03)', padding: '1.5rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border-subtle)' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '2.5rem', textAlign: 'left', background: 'var(--bg-surface)', padding: '1.5rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-md)' }}>
             {[
-              ['Unlimited projects & tasks'],
-              ['Role-based access control'],
-              ['Real-time kanban board'],
+              ['Next-generation workflows'],
+              ['Enterprise-grade security'],
+              ['Limitless scalability'],
             ].map(([text]) => (
               <div key={text} style={{
-                display: 'flex', alignItems: 'center', gap: '0.75rem',
-                fontSize: '0.9rem', color: 'var(--text-sub)', fontWeight: 500,
+                display: 'flex', alignItems: 'center', gap: '0.8rem',
+                fontSize: '0.95rem', color: 'var(--text-main)', fontWeight: 600,
               }}>
-                <div style={{ width: '20px', height: '20px', borderRadius: '50%', background: 'rgba(6,182,212,0.15)', color: 'var(--teal)', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(6,182,212,0.3)', flexShrink: 0 }}>
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                <div style={{ width: '24px', height: '24px', borderRadius: '50%', background: 'rgba(16, 185, 129, 0.1)', color: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                 </div>
                 {text}
               </div>
@@ -137,14 +134,13 @@ export default function Signup() {
             <div style={{
               padding: '0.875rem 1rem',
               borderRadius: 'var(--radius-md)',
-              background: 'rgba(244,63,94,0.12)',
-              border: '1px solid rgba(244,63,94,0.3)',
-              color: 'var(--rose)',
+              background: '#fee2e2',
+              border: '1px solid #fecaca',
+              color: '#991b1b',
               fontSize: '0.9rem',
               fontWeight: 500,
               marginBottom: '1.5rem',
               display: 'flex', alignItems: 'center', gap: '0.625rem',
-              animation: 'scaleIn 0.2s ease',
             }}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                 <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>

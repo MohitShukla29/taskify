@@ -38,6 +38,7 @@ app.use('/api/auth', auth_1.default);
 app.use('/api/dashboard', dashboard_1.default);
 app.use('/api/projects', projects_1.default);
 app.use('/api/projects/:projectId/members', members_1.default);
+app.use('/api/projects/:projectId/tasks', tasks_1.default);
 app.use('/api/tasks', tasks_1.default);
 // ── 404 handler ───────────────────────────────────────────────────────────────
 app.use((_req, res) => {

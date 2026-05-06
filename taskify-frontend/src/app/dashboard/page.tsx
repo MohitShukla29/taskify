@@ -38,11 +38,11 @@ function StatCard({ label, value, color, glow, icon }: {
   const animVal = useCountUp(value);
   return (
     <div className="stat-card" style={{ borderTop: `2px solid ${color}`, cursor: 'pointer' }}>
-      {/* Subtle top glow */}
+      {/* Accent top line */}
       <div style={{
         position: 'absolute', top: 0, left: 0, right: 0,
-        height: '60px',
-        background: `linear-gradient(180deg, ${glow} 0%, transparent 100%)`,
+        height: '3px',
+        background: color,
         borderRadius: 'var(--radius-lg) var(--radius-lg) 0 0',
         pointerEvents: 'none',
       }}/>
@@ -109,8 +109,8 @@ export default function Dashboard() {
     {
       label: 'Total Projects',
       value: stats.totalProjects,
-      color: 'var(--primary-light)',
-      glow: 'rgba(124,58,237,0.2)',
+      color: 'var(--primary)',
+      glow: 'var(--primary-glow)',
       icon: (
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/>
@@ -122,7 +122,7 @@ export default function Dashboard() {
       label: 'My Active Tasks',
       value: stats.userTasksCount,
       color: 'var(--teal)',
-      glow: 'rgba(6,182,212,0.2)',
+      glow: 'var(--teal-glow)',
       icon: (
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <polyline points="9 11 12 14 22 4"/>
@@ -134,7 +134,7 @@ export default function Dashboard() {
       label: 'Total Tasks',
       value: stats.totalTasks,
       color: 'var(--text-sub)',
-      glow: 'rgba(196,181,253,0.15)',
+      glow: 'var(--border)',
       icon: (
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <line x1="8" y1="6" x2="21" y2="6"/>
@@ -150,7 +150,7 @@ export default function Dashboard() {
       label: 'Overdue Tasks',
       value: stats.overdueTasks,
       color: 'var(--rose)',
-      glow: 'rgba(244,63,94,0.18)',
+      glow: 'var(--rose-glow)',
       icon: (
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
           <circle cx="12" cy="12" r="10"/>
@@ -168,7 +168,7 @@ export default function Dashboard() {
         marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem',
       }}>
         <div>
-          <p style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--primary-light)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.35rem' }}>
+          <p style={{ fontSize: '0.82rem', fontWeight: 600, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.08em', marginBottom: '0.35rem' }}>
             {getGreeting()}
           </p>
           <h1 style={{ fontSize: '2.25rem', fontWeight: 800, letterSpacing: '-0.035em', lineHeight: 1.1, marginBottom: '0.5rem', color: 'var(--text-main)' }}>
@@ -259,8 +259,7 @@ export default function Dashboard() {
             <h2 style={{ fontSize: '1.1rem', fontWeight: 700, marginBottom: '1.75rem', display: 'flex', alignItems: 'center', gap: '0.75rem', color: 'var(--text-main)' }}>
               <span style={{
                 width: '10px', height: '10px', borderRadius: '50%',
-                background: 'var(--grad-teal)', display: 'inline-block',
-                boxShadow: '0 0 8px var(--teal-glow)',
+                background: 'var(--teal)', display: 'inline-block',
               }}/>
               Tasks per User
             </h2>
@@ -268,13 +267,13 @@ export default function Dashboard() {
               {stats.tasksPerUser.length > 0 ? stats.tasksPerUser.map((u: any, idx: number) => (
                 <div key={idx} style={{
                   display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                  background: 'rgba(255,255,255,0.03)', padding: '0.75rem 1rem', borderRadius: 'var(--radius-md)',
-                  border: '1px solid var(--border-subtle)'
+                  background: 'var(--bg-input)', padding: '0.75rem 1rem', borderRadius: 'var(--radius-md)',
+                  border: '1px solid var(--border)'
                 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
                     <div style={{
                       width: '28px', height: '28px', borderRadius: '50%',
-                      background: 'var(--grad-primary)', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                      background: 'var(--primary)', display: 'flex', alignItems: 'center', justifyContent: 'center',
                       fontSize: '0.7rem', fontWeight: 700, color: '#fff'
                     }}>
                       {u.name.charAt(0)}

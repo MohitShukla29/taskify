@@ -1,0 +1,12 @@
+{
+  "name": "taskify-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "install:all": "npm --prefix taskify-frontend install && npm --prefix taskify-backend install",
+    "dev": "concurrently \"npm --prefix taskify-frontend run dev\" \"npm --prefix taskify-backend run dev\""
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
