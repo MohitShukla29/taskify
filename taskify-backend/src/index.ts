@@ -3,23 +3,19 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 
-import authRouter      from './routes/auth';
+import authRouter from './routes/auth';
 import dashboardRouter from './routes/dashboard';
-import projectsRouter  from './routes/projects';
-import membersRouter   from './routes/members';
-import tasksRouter     from './routes/tasks';
+import projectsRouter from './routes/projects';
+import membersRouter from './routes/members';
+import tasksRouter from './routes/tasks';
 
-const app  = express();
+const app = express();
 const PORT = process.env.PORT || 4000;
 
 // ── CORS — allow the Next.js frontend with credentials ──────────────────────
 app.use(
   cors({
-    origin: [
-      'http://localhost:3000',
-      'http://localhost:3001',
-      // Add production frontend URL here when deploying
-    ],
+    origin: "*",
     credentials: true,         // allow cookies to be sent cross-origin
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
@@ -37,12 +33,12 @@ app.get('/health', (_req, res) => {
 });
 
 // ── API Routes ───────────────────────────────────────────────────────────────
-app.use('/api/auth',                        authRouter);
-app.use('/api/dashboard',                   dashboardRouter);
-app.use('/api/projects',                    projectsRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/dashboard', dashboardRouter);
+app.use('/api/projects', projectsRouter);
 app.use('/api/projects/:projectId/members', membersRouter);
-app.use('/api/projects/:projectId/tasks',   tasksRouter);
-app.use('/api/tasks',                       tasksRouter);
+app.use('/api/projects/:projectId/tasks', tasksRouter);
+app.use('/api/tasks', tasksRouter);
 
 // ── 404 handler ───────────────────────────────────────────────────────────────
 app.use((_req, res) => {
